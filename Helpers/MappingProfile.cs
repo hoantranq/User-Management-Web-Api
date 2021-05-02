@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using UserManagement_Backend.DTOs;
 using UserManagement_Backend.Models;
 
@@ -9,6 +10,8 @@ namespace UserManagement_Backend.Helpers
         public MappingProfile()
         {
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<User, UserForListingDto>();
+            CreateMap<IdentityRole, RoleDto>();
         }
     }
 }

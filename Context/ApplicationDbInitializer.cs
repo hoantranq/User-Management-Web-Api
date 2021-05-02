@@ -11,9 +11,9 @@ namespace UserManagement_Backend.Context
         public static async Task Seed(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
         {
             // Seed Roles
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Administrator.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Moderator.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Administrator.ToString().ToLower()));
+            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.Moderator.ToString().ToLower()));
+            await roleManager.CreateAsync(new IdentityRole(Authorization.Roles.User.ToString().ToLower()));
 
             // Seed Default User
             var defaultUser = new User
