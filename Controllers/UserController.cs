@@ -35,10 +35,10 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        [HttpGet("{userId}")]
+        public async Task<IActionResult> GetUserById(string userId)
         {
-            var response = await _userService.GetUserById(id);
+            var response = await _userService.GetUserById(userId);
 
             if (!response.Succeeded)
             {

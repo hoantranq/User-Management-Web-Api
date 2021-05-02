@@ -35,6 +35,8 @@ namespace UserManagement_Backend
 
             services.ConfigureRoleService();
 
+            services.ConfigureUserRolesService();
+
             services.ConfigurePermissionService();
 
             services.ConfigureJwtAuthentication(Configuration);

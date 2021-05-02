@@ -13,6 +13,7 @@ using UserManagement_Backend.Services.Loggers;
 using Microsoft.Extensions.DependencyInjection;
 using UserManagement_Backend.Services.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using UserManagement_Backend.Services.UserRoles;
 
 namespace UserManagement_Backend.Helpers
 {
@@ -54,6 +55,12 @@ namespace UserManagement_Backend.Helpers
             services.AddScoped<IRoleService, RoleService>();
         }
 
+        // Configure for User Roles Service
+        public static void ConfigureUserRolesService(this IServiceCollection services)
+        {
+            services.AddScoped<IUserRoleService, UserRoleService>();
+        }
+
         // Configure for Permission Service
         public static void ConfigurePermissionService(this IServiceCollection services)
         {
@@ -65,7 +72,7 @@ namespace UserManagement_Backend.Helpers
         {
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<User>>();
 
             services.AddAuthentication(options =>
             {

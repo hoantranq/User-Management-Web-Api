@@ -36,10 +36,10 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRoleById(string id)
+        [HttpGet("{roleId}")]
+        public async Task<IActionResult> GetRoleById(string roleId)
         {
-            var response = await _roleService.GetByRoleId(id);
+            var response = await _roleService.GetByRoleId(roleId);
 
             if (!response.Succeeded)
             {
@@ -62,10 +62,10 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteRole(string id)
+        [HttpDelete("delete/{roleId}")]
+        public async Task<IActionResult> DeleteRole(string roleId)
         {
-            var response = await _roleService.DeleteRole(id);
+            var response = await _roleService.DeleteRole(roleId);
 
             if (!response.Succeeded)
             {
