@@ -1,11 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using UserManagement_Backend.DTOs;
+using UserManagement_Backend.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using UserManagement_Backend.Services.UserRoles;
 
 namespace UserManagement_Backend.Controllers
 {
+    [Authorize(Policy = Authorization.ADMIN_ONLY)]
     [Authorize]
     [ApiController]
     [Route("api/user-roles")]

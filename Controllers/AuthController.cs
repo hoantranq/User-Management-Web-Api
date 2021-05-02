@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using UserManagement_Backend.DTOs;
 using UserManagement_Backend.Services.Auths;
@@ -22,6 +23,7 @@ namespace UserManagement_Backend.Controllers
 
         #region Public Methods
         // Register
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
@@ -36,6 +38,7 @@ namespace UserManagement_Backend.Controllers
         }
 
         // Login
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
@@ -50,6 +53,7 @@ namespace UserManagement_Backend.Controllers
         }
 
         // Refresh Token
+        [Authorize]
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
         {
@@ -64,6 +68,7 @@ namespace UserManagement_Backend.Controllers
         }
 
         //Revoke Token
+        [Authorize]
         [HttpPost("revoke-token")]
         public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenDto refreshTokenDto)
         {

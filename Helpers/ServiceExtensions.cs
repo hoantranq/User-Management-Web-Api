@@ -11,7 +11,6 @@ using UserManagement_Backend.Services.Roles;
 using UserManagement_Backend.Services.Users;
 using UserManagement_Backend.Services.Loggers;
 using Microsoft.Extensions.DependencyInjection;
-using UserManagement_Backend.Services.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using UserManagement_Backend.Services.UserRoles;
 
@@ -62,9 +61,35 @@ namespace UserManagement_Backend.Helpers
         }
 
         // Configure for Permission Service
-        public static void ConfigurePermissionService(this IServiceCollection services)
+        public static void ConfigurePolicyService(this IServiceCollection services)
         {
-            services.AddScoped<IPermissionService, PermissionService>();
+            services.AddAuthorization(options =>
+            {
+                // Policy for Admin
+                options.AddPolicy(Authorization.ADMIN_ONLY, policy => 
+                {
+                    policy.RequireRole(
+                        Authorization.Roles.Administrator.ToString()    
+                    );
+                });
+
+                // Policy for Manager
+                options.AddPolicy(Authorization.MANAGER_ONLY, policy =>
+                {
+                    policy.RequireRole(
+                        Authorization.Roles.Administrator.ToString(),
+                        Authorization.Roles.Moderator.ToString()
+                    );
+                });
+
+                // Policy for Basic User
+                options.AddPolicy(Authorization.VIEW_ONLY, policy =>
+                {
+                    policy.RequireRole(
+                        Authorization.Roles.User.ToString()
+                    );
+                });
+            });
         }
 
         // Configure for JWT

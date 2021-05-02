@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using UserManagement_Backend.DTOs;
+using UserManagement_Backend.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using UserManagement_Backend.Services.Roles;
 
 namespace UserManagement_Backend.Controllers
@@ -49,6 +50,7 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = Authorization.ADMIN_ONLY)]
         [HttpPost("create")]
         public async Task<IActionResult> CreateRole([FromBody] RoleForCreateDto roleForCreateDto)
         {
@@ -62,6 +64,7 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = Authorization.ADMIN_ONLY)]
         [HttpDelete("delete/{roleId}")]
         public async Task<IActionResult> DeleteRole(string roleId)
         {

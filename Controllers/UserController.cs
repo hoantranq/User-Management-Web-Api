@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using UserManagement_Backend.Services.Users;
+using UserManagement_Backend.Helpers;
 
 namespace UserManagement_Backend.Controllers
 {
@@ -48,6 +49,7 @@ namespace UserManagement_Backend.Controllers
             return Ok(response);
         }
 
+        [Authorize(Policy = Authorization.ADMIN_ONLY)]
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteUserById(string userId)
         {
