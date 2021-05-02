@@ -36,10 +36,46 @@ namespace UserManagement_Backend.Controllers
         }
 
         // Login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
+        {
+            var response = await _authService.LoginAsync(userForLoginDto);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
 
         // Refresh Token
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var response = await _authService.RefreshTokenAsync(refreshTokenDto.Token);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
 
         //Revoke Token
+        [HttpPost("revoke-token")]
+        public async Task<IActionResult> RevokeToken([FromBody] RefreshTokenDto refreshTokenDto)
+        {
+            var response = await _authService.RevokeTokenAsync(refreshTokenDto.Token);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         #endregion
     }
 }
