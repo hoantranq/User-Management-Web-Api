@@ -6,12 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using UserManagement_Backend.Context;
 using Microsoft.Extensions.Configuration;
-using UserManagement_Backend.Services.Auth;
-using UserManagement_Backend.Services.Role;
-using UserManagement_Backend.Services.User;
-using UserManagement_Backend.Services.Logger;
+using UserManagement_Backend.Services.Auths;
+using UserManagement_Backend.Services.Roles;
+using UserManagement_Backend.Services.Users;
+using UserManagement_Backend.Services.Loggers;
 using Microsoft.Extensions.DependencyInjection;
-using UserManagement_Backend.Services.Permission;
+using UserManagement_Backend.Services.Permissions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace UserManagement_Backend.Helpers

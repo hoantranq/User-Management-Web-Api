@@ -1,6 +1,6 @@
 ﻿using NLog;
 
-namespace UserManagement_Backend.Services.Logger
+namespace UserManagement_Backend.Services.Loggers
 {
     public class LoggerManager : ILoggerManager
     {

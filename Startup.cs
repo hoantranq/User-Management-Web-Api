@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
+using System.Linq;
 using UserManagement_Backend.Helpers;
+using UserManagement_Backend.Models.Responses;
 
 namespace UserManagement_Backend
 {
@@ -41,7 +45,28 @@ namespace UserManagement_Backend
 
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
-            services.AddControllers();
+            services.AddControllers().ConfigureApiBehaviorOptions(options => 
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errs = new List<string>();
+
+                    foreach (var modelState in context.ModelState)
+                    {
+                        errs = modelState.Value.Errors.Select(e => e.ErrorMessage).ToList();
+                    }
+
+                    var response = new BaseApiResponse
+                    { 
+                        Succeeded = false,
+                        Message = "An error occurred when attempting to make a request.",
+                        Data = null,
+                        Errors = errs
+                    };
+
+                    return new BadRequestObjectResult(response);
+                };
+            });
 
             services.AddSwaggerGen(c =>
             {

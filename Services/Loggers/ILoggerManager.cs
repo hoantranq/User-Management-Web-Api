@@ -1,4 +1,4 @@
-﻿namespace UserManagement_Backend.Services.Logger
+﻿namespace UserManagement_Backend.Services.Loggers
 {
     public interface ILoggerManager
     {

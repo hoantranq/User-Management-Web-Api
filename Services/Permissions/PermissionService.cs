@@ -1,4 +1,4 @@
-﻿namespace UserManagement_Backend.Services.Permission
+﻿namespace UserManagement_Backend.Services.Permissions
 {
     public class PermissionService : IPermissionService
     {

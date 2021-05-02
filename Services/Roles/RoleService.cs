@@ -1,4 +1,4 @@
-﻿namespace UserManagement_Backend.Services.Role
+﻿namespace UserManagement_Backend.Services.Roles
 {
     public class RoleService : IRoleService
     {
