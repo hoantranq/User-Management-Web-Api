@@ -9,5 +9,7 @@ namespace UserManagement_Backend.Services.Users
         Task<BaseApiResponse> GetAll(ClaimsPrincipal claimsPrincipal);
 
         Task<BaseApiResponse> GetUserById(string userId);
+
+        Task<BaseApiResponse> RemoveUserById(string userId);
     }
 }

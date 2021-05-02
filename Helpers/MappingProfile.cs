@@ -12,6 +12,7 @@ namespace UserManagement_Backend.Helpers
             CreateMap<UserForRegisterDto, User>();
             CreateMap<User, UserForListingDto>();
             CreateMap<IdentityRole, RoleDto>();
+            CreateMap<User, UserDto>();
         }
     }
 }

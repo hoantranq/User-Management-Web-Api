@@ -74,6 +74,19 @@ namespace UserManagement_Backend.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("users-from-role/{roleId}")]
+        public async Task<IActionResult> GetUsersFromRole(string roleId)
+        {
+            var response = await _roleService.ListAllUsersFromRole(roleId);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         #endregion
     }
 }

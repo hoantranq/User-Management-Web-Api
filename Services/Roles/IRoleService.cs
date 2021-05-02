@@ -12,5 +12,7 @@ namespace UserManagement_Backend.Services.Roles
         Task<BaseApiResponse> CreateRole(string roleName);
 
         Task<BaseApiResponse> DeleteRole(string roleId);
+
+        Task<BaseApiResponse> ListAllUsersFromRole(string roleId);
     }
 }

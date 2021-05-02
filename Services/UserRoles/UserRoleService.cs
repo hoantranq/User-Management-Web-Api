@@ -8,6 +8,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using UserManagement_Backend.Context;
 using UserManagement_Backend.DTOs;
+using UserManagement_Backend.Helpers;
 using UserManagement_Backend.Models;
 using UserManagement_Backend.Models.Responses;
 
@@ -108,7 +109,17 @@ namespace UserManagement_Backend.Services.UserRoles
 
                 var result = await _userManager.RemoveFromRolesAsync(user, roles);
 
-                result = await _userManager.AddToRolesAsync(user, userRolesForEditDto.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));
+                // In case we forgot to select any roles for user, we will add this user to role user by default.
+                var isUserInAnyRoles = userRolesForEditDto.UserRoles.Any(x => x.Selected == true);
+
+                if (!isUserInAnyRoles)
+                {
+                    result = await _userManager.AddToRolesAsync(user, new List<string> { Authorization.DEFAULT_ROLE.ToString() });
+                }
+                else
+                {
+                    result = await _userManager.AddToRolesAsync(user, userRolesForEditDto.UserRoles.Where(x => x.Selected).Select(y => y.RoleName));
+                }
 
                 var currentUser = await _userManager.GetUserAsync(claimsPrincipal);
 

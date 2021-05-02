@@ -47,6 +47,19 @@ namespace UserManagement_Backend.Controllers
 
             return Ok(response);
         }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUserById(string userId)
+        {
+            var response = await _userService.RemoveUserById(userId);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         #endregion
     }
 }

@@ -6,6 +6,8 @@ using UserManagement_Backend.DTOs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UserManagement_Backend.Models.Responses;
+using UserManagement_Backend.Models;
+using System.Linq;
 
 namespace UserManagement_Backend.Services.Roles
 {
@@ -14,13 +16,15 @@ namespace UserManagement_Backend.Services.Roles
         #region Private Fields
         private readonly IMapper _mapper;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<User> _userManager;
         #endregion
 
         #region Constructor
-        public RoleService(RoleManager<IdentityRole> roleManager, IMapper mapper)
+        public RoleService(RoleManager<IdentityRole> roleManager, UserManager<User> userManager, IMapper mapper)
         {
             _mapper = mapper;
             _roleManager = roleManager;
+            _userManager = userManager;
         }
         #endregion
 
@@ -125,6 +129,46 @@ namespace UserManagement_Backend.Services.Roles
             catch (Exception ex)
             {
                 return BaseApiResponseHelper.GenerateApiResponse(false, "delete role", null, new List<string> { $"{ex.Message}." });
+            }
+        }
+
+        public async Task<BaseApiResponse> ListAllUsersFromRole(string roleId)
+        {
+            try
+            {
+                if (roleId == null)
+                {
+                    return BaseApiResponseHelper.GenerateApiResponse(false, "list all users from role", null, new List<string> { $"Role Id is null." });
+                }
+
+                var role = await _roleManager.FindByIdAsync(roleId);
+
+                if (role == null)
+                {
+                    return BaseApiResponseHelper.GenerateApiResponse(false, "list all users from role", null, new List<string> { $"Role with id {roleId} did not match any roles." });
+                }
+
+                var users = new List<User>(_userManager.GetUsersInRoleAsync(role.Name).Result);
+
+                var usersToReturn = new List<UserDto>();
+
+                foreach (var item in users)
+                {
+                    usersToReturn.Add(_mapper.Map<UserDto>(item));
+                }
+
+                var data = new RoleForListingUserDto
+                {
+                    Id = role.Id,
+                    RoleName = role.Name,
+                    Users = usersToReturn
+                };
+
+                return BaseApiResponseHelper.GenerateApiResponse(true, "List all users from role", new List<RoleForListingUserDto> { data }, null);
+            }
+            catch (Exception ex)
+            {
+                return BaseApiResponseHelper.GenerateApiResponse(false, "list all users from role", null, new List<string> { $"{ex.Message}." });
             }
         }
         #endregion
