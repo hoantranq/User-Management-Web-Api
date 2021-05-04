@@ -13,6 +13,7 @@ using UserManagement_Backend.Services.Loggers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using UserManagement_Backend.Services.UserRoles;
+using UserManagement_Backend.Services.Emails;
 
 namespace UserManagement_Backend.Helpers
 {
@@ -66,10 +67,10 @@ namespace UserManagement_Backend.Helpers
             services.AddAuthorization(options =>
             {
                 // Policy for Admin
-                options.AddPolicy(Authorization.ADMIN_ONLY, policy => 
+                options.AddPolicy(Authorization.ADMIN_ONLY, policy =>
                 {
                     policy.RequireRole(
-                        Authorization.Roles.Administrator.ToString()    
+                        Authorization.Roles.Administrator.ToString()
                     );
                 });
 
@@ -128,6 +129,13 @@ namespace UserManagement_Backend.Helpers
                 options.UseMySql(configuration.GetConnectionString("UserManagementDbConnection"),
                     MySqlServerVersion.LatestSupportedServerVersion);
             });
+        }
+
+        // Configure for Email Sending Service
+        public static void ConfigureEmailService(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<MailSettings>(configuration.GetSection("MailSettings"));
+            services.AddTransient<IEmailService, EmailService>();
         }
     }
 }

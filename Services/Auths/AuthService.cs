@@ -215,6 +215,32 @@ namespace UserManagement_Backend.Services.Auths
             return BaseApiResponseHelper.GenerateApiResponse(true, "Revoke a token", null, null);
         }
 
+        // Forgot Password
+        public async Task<BaseApiResponse> ForgotPassword(ForgotPasswordDto forgotPasswordDto)
+        {
+            try
+            {
+                if (forgotPasswordDto == null)
+                {
+                    return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Email is null." });
+                }
+
+                var user = await _userManager.FindByEmailAsync(forgotPasswordDto.Email);
+
+                if (user == null)
+                {
+                    return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Could not found any users registered with this email." });
+                }
+
+                var newToken = CreateJwtToken(user);
+
+
+            }
+            catch (Exception ex)
+            {
+                return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { $"{ex.Message}" });
+            }
+        }
         #endregion
 
         #region Private Methods

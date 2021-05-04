@@ -47,6 +47,8 @@ namespace UserManagement_Backend
 
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
+            services.ConfigureEmailService(Configuration);
+
             services.AddControllers().ConfigureApiBehaviorOptions(options => 
             {
                 options.InvalidModelStateResponseFactory = context =>
