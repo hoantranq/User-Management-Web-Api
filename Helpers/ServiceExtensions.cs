@@ -98,7 +98,10 @@ namespace UserManagement_Backend.Helpers
         {
             services.Configure<JWT>(Configuration.GetSection("JWT"));
 
-            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddSignInManager<SignInManager<User>>();
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<User>>()
+                .AddDefaultTokenProviders();
 
             services.AddAuthentication(options =>
             {

@@ -13,5 +13,9 @@ namespace UserManagement_Backend.Services.Auths
         Task<BaseApiResponse> RefreshTokenAsync(string refreshToken);
 
         Task<BaseApiResponse> RevokeTokenAsync(string refreshToken);
+
+        Task<BaseApiResponse> ForgotPassword(ForgotPasswordDto forgotPasswordDto);
+
+        Task<BaseApiResponse> ResetPasswordAsync(UserForResetPasswordDto userForResetPasswordDto);
     }
 }

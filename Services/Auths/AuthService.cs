@@ -15,6 +15,9 @@ using System.Security.Cryptography;
 using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Configuration;
+using UserManagement_Backend.Services.Emails;
 
 namespace UserManagement_Backend.Services.Auths
 {
@@ -25,6 +28,8 @@ namespace UserManagement_Backend.Services.Auths
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly JWT _jwt;
+        private readonly IConfiguration _configuration;
+        private readonly IEmailService _emailService;
         #endregion
 
         #region Constructor
@@ -32,12 +37,16 @@ namespace UserManagement_Backend.Services.Auths
             UserManager<User> userManager,
             IOptions<JWT> jwt,
             IMapper mapper,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IConfiguration configuration,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _context = context;
             _mapper = mapper;
             _jwt = jwt.Value;
+            _configuration = configuration;
+            _emailService = emailService;
         }
         #endregion
 
@@ -232,14 +241,59 @@ namespace UserManagement_Backend.Services.Auths
                     return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Could not found any users registered with this email." });
                 }
 
-                var newToken = CreateJwtToken(user);
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
+                var encodedToken = Encoding.UTF8.GetBytes(token);
 
+                var validToken = WebEncoders.Base64UrlEncode(encodedToken);
+
+                string url = $"{_configuration["ApplicationUrl"]}/reset-password?email={forgotPasswordDto.Email}&token={validToken}";
+
+                var mailRequest = new MailRequest
+                {
+                    ToEmail = forgotPasswordDto.Email,
+                    Subject = "Reset Password Confirmation",
+                    Attachments = null,
+                    Body = "<h1>Follow the instructions to reset your password</h1>" +
+                            $"<p>To reset your password <a href='{url}'>Click here</a></p>"
+                };
+
+                await _emailService.SendEmailAsync(mailRequest);
+
+                return BaseApiResponseHelper.GenerateApiResponse(true, "Reset password url has been sent to the email", null, null);
             }
             catch (Exception ex)
             {
                 return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { $"{ex.Message}" });
             }
+        }
+
+        public async Task<BaseApiResponse> ResetPasswordAsync(UserForResetPasswordDto userForResetPasswordDto)
+        {
+            if (userForResetPasswordDto == null)
+            {
+                return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Invalid request." });
+            }
+
+            var user = await _userManager.FindByEmailAsync(userForResetPasswordDto.Email);
+
+            if (user == null)
+            {
+                return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Could not found any users registered with this email." });
+            }
+
+            var decodedToken = WebEncoders.Base64UrlDecode(userForResetPasswordDto.Token);
+
+            string normalToken = Encoding.UTF8.GetString(decodedToken);
+
+            var result = await _userManager.ResetPasswordAsync(user, normalToken, userForResetPasswordDto.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return BaseApiResponseHelper.GenerateApiResponse(false, "handle your request.", null, new List<string> { "Could not reset password." });
+            }
+
+            return BaseApiResponseHelper.GenerateApiResponse(true, "Reset password", null, null);
         }
         #endregion
 

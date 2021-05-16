@@ -81,6 +81,32 @@ namespace UserManagement_Backend.Controllers
 
             return Ok(response);
         }
+
+        [HttpPost("forget-password")]
+        public async Task<IActionResult> ForgetPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            var response = await _authService.ForgotPassword(forgotPasswordDto);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] UserForResetPasswordDto userForResetPasswordDto)
+        {
+            var response = await _authService.ResetPasswordAsync(userForResetPasswordDto);
+
+            if (!response.Succeeded)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         #endregion
     }
 }
